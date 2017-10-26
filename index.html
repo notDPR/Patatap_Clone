@@ -191,6 +191,7 @@
           keyData[event.key].sound.play() ;
           myCircle.fillColor = keyData[event.key].color;
           circles.push(myCircle);
+          text.opacity = 0.5 ;
         }
       }
 
@@ -202,6 +203,7 @@
           if(circles[i].area < 0.5)
           {
             circles.splice(i,1);
+            text.opacity = 1 ;
           }
         }
       }
