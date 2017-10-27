@@ -4,54 +4,44 @@
     <meta charset="utf-8">
     <title>Patatap</title>
     <link rel="stylesheet" href="main.css">
-    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.11.5/paper-full.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.4/howler.js"></script>
     <script type="text/paperscript" canvas="myCanvas">
-    	var maal = document.getElementById("myCanvas");
-    	var text = new PointText({
-    		point : [maal.width/2,maal.height/2],
-    		content : "Press any A-Z key",
-    		fillColor : "white",
-    		fontFamily : "lato" ,
-    		fontSize : "50px" ,
-    		justification :"center",
-    		strokeColor : "red",
-    		strokeWidth : "10px"
-    	});
 
     	var keyData = {
-        q : {
+          	q : {
             sound : new Howl({
             src: ['sounds/bubbles.mp3']
             }) ,
             color : "#1abc9c"
           } ,
-        w : {
+          	w : {
             sound : new Howl({
             src: ['sounds/clay.mp3']
             }) ,
             color : "#2ecc71"
           } ,
-        e: {
+          	e: {
 			      sound: new Howl({
 	  		    src: ['sounds/confetti.mp3']
 			      }),
 			      color: '#3498db'
     		},
-    	 	r: {
+    		r: {
     			sound: new Howl({
     	  		src: ['sounds/corona.mp3']
     			}),
     			color: '#9b59b6'
     		},
-    		t: {
+    			t: {
     			sound: new Howl({
     	  		src: ['sounds/dotted-spiral.mp3']
     			}),
     			color: '#34495e'
     		},
-    	 	y: {
+    		y: {
     			sound: new Howl({
     	  		src: ['sounds/flash-1.mp3']
     			}),
@@ -93,7 +83,7 @@
     			}),
     			color: '#e67e22'
     		},
-    			d: {
+    		d: {
     			sound: new Howl({
     	  		src: ['sounds/piston-2.mp3']
     			}),
@@ -179,31 +169,68 @@
     		}
       }
 
+      	var maal = document.getElementById("myCanvas");
+    	var text = new PointText({
+    		point : [maal.width/2,maal.height/2],
+    		content : "Press any A-Z key",
+    		fillColor : "#e8eaed",
+    		fontFamily : "lato" ,
+    		fontSize : "50px" ,
+    		justification :"center",
+    		strokeColor : "red",
+    		strokeWidth : "10px"
+    	});
+    	
+    	var chr = new PointText({
+    		point : [maal.width/2,maal.height/2 + 53],
+    		content : "Make a beat",
+    		fontFamily : "lato" ,
+    		fontSize : "50px" ,
+    		justification :"center",
+    		strokeColor : "red",
+    		strokeWidth : "10px"
+    	});
+    	
+    	$(document).ready(function(){
+    		chr.visible = false ;
+    	});
+
       var circles = [] ;
 
       function onKeyDown(event) {
         if(keyData[event.key])
-        {
-          var maxPoint = new Point(view.size.width , view.size.height);
-          var randomPoint = Point.random();
-          var point = randomPoint * maxPoint ;
-          var myCircle = new Path.Circle(point, 350);
-          keyData[event.key].sound.play() ;
-          myCircle.fillColor = keyData[event.key].color;
-          circles.push(myCircle);
-          text.opacity = 0.5 ;
-        }
+	        {
+	          var maxPoint = new Point(view.size.width , view.size.height);
+	          var randomPoint = Point.random();
+	          var point = randomPoint * maxPoint ;
+	          var myCircle = new Path.Circle(point, 350);
+	          keyData[event.key].sound.play() ;
+	          myCircle.fillColor = keyData[event.key].color;
+	          circles.push(myCircle);
+	          text.opacity = 0.5 ;
+	          text.content = "Make a Beat"
+	          chr.visible  = true ; 
+	          chr.fillColor = keyData[event.key].color ;
+	          chr.content = "'" + event.key.toUpperCase() + "'" ;
+	   		}
+   		else 
+   			{
+   				
+			}
       }
 
       function onFrame(event){
         for(var i=0;i<circles.length;i++)
         {
           circles[i].fillColor.hue = circles[i].fillColor.hue + 1 ;
+          chr.fillColor.hue = chr.fillColor.hue + 1 ;
           circles[i].scale(0.9);
           if(circles[i].area < 0.5)
           {
             circles.splice(i,1);
             text.opacity = 1 ;
+            text.content = "Press any A-Z key" ;
+            chr.visible  = false ; 
           }
         }
       }
